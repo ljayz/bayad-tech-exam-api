@@ -14,19 +14,45 @@ provider:
   name: aws
   runtime: nodejs10.x
   stage: dev
-  region: us-east-1
-  # To load environment variables externally
-  # rename env.example to .env and uncomment
-  # the following line. Also, make sure to not
-  # commit your .env.
-  #
-  #environment:
-  #  SAMPLE_ENV_VAR: ${env:SAMPLE_ENV_VAR}
+  region: us-east-1  
+  environment:
+    MYSQL_ENDPOINT: ${env:MYSQL_ENDPOINT}
+    MYSQL_DATABASE: ${env:MYSQL_DATABASE}
+    MYSQL_USERNAME: ${env:MYSQL_USERNAME}
+    MYSQL_PASSWORD: ${env:MYSQL_PASSWORD}
 
-functions:
-  hello:
-    handler: handler.hello
+functions:  
+  postUser:
+    handler: handler.createUser
     events:
       - http:
-          path: hello
+          path: user
+          method: post
+  
+  getUser:
+    handler: handler.user
+    events:
+      - http:
+          path: user/{id}
           method: get
+
+  getUsers:
+    handler: handler.users
+    events:
+      - http:
+          path: users
+          method: get
+
+  putUser:
+    handler: handler.updateUser
+    events:
+      - http:
+          path: user/{id}
+          method: put
+
+  deleteUser:
+    handler: handler.deleteUser
+    events:
+      - http:
+          path: user/{id}
+          method: delete
